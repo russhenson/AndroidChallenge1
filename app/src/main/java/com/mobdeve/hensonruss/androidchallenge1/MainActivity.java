@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide(); // hide title bar
         setContentView(R.layout.activity_main);
 
         emailListView = (ListView) findViewById(R.id.emailListView);

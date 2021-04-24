@@ -16,6 +16,7 @@ public class EmailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide(); // hide title bar
         setContentView(R.layout.activity_email);
 
         /*// Initialization of the views
