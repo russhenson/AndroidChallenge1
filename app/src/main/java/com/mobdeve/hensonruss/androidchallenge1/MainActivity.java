@@ -34,9 +34,16 @@ public class MainActivity extends AppCompatActivity {
         receiverList.add("henson.rj10@gmail.com");
         receiverList.add("steezymnl@gmail.com");
         receiverList.add("henson.russ10@gmail.com");
+        receiverList.add("henson.rj10@gmail.com");
+        receiverList.add("steezymnl@gmail.com");
+        receiverList.add("henson.russ10@gmail.com");
         subjectList.add("Question regarding Photoshop");
         subjectList.add("Steezy design - April");
         subjectList.add("Meeting set");
+        subjectList.add("Question regarding Photoshop");
+        subjectList.add("Steezy design - April");
+        subjectList.add("Meeting set");
+
 
         EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList);
         emailListView.setAdapter(adapter);
@@ -60,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             LayoutInflater layoutInflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View email = layoutInflater.inflate(R.layout.email_layout, parent, false);
-            TextView receiver = email.findViewById(R.id.sentEmailSubjectTv);
+            TextView receiver = email.findViewById(R.id.sentEmailReceiverTv);
             TextView subject = email.findViewById(R.id.sentEmailSubjectTv);
 
             receiver.setText(rReceiver.get(position));

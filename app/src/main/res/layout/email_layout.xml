@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="110dp"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
     android:orientation="vertical">
 
 
@@ -34,7 +36,7 @@
 
         <TextView
             android:id="@+id/sentEmailReceiverTv"
-            android:layout_width="370dp"
+            android:layout_width="360dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="receiver_email@gmail.com"
@@ -60,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:maxLines="2"
-        android:text="<Body of the email with only two line shown. dgbvasfg haosuihfafhiasofiasohfioashfshfasiofhiashfioafhaisofhaioshfiaso>"
+        android:text="Body of the email with only two line shown. dgbvasfg haosuihfafhiasofiasohfioashfshfasiofhiashfioafhaisofhaioshfiaso"
         android:textSize="16sp" />
 
 
