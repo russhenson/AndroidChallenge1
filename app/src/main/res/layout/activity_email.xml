@@ -27,6 +27,8 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingTop="70dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -34,8 +36,6 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:text="From: Russ Henson"
             android:textColor="#000000"
             android:textSize="18sp"
@@ -44,38 +44,32 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
 
             <TextView
-                android:id="@+id/textView3"
-                android:layout_width="40dp"
+                android:id="@+id/toTv2"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="To:"
+                android:text="To: "
                 android:textColor="#000000"
-                android:textSize="18sp" />
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/receiverTv"
-                android:layout_width="360dp"
+                android:layout_width="350dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="receiver_email@gmail.com"
                 android:textColor="#000000"
                 android:textSize="18sp" />
-
-
         </LinearLayout>
 
         <TextView
             android:id="@+id/subjectTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:text="Subject of the email"
             android:textColor="#000000"
             android:textSize="24sp"
@@ -84,9 +78,7 @@
         <TextView
             android:id="@+id/emailBodyTv"
             android:layout_width="match_parent"
-            android:layout_height="540dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_height="520dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="20dp"
             android:text="Body of the email"
