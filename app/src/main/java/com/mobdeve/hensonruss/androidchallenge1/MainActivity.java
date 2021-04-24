@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> subjectList = new ArrayList<>();
         ArrayList<String> bodyList = new ArrayList<>();
 
-        // Get arraylist of emai in the shared preferences
+        // Get arraylist of email in the shared preferences
         emailList = SharedPreference.readListFromPref(this);
 
         // check if there's email in the array list
@@ -60,29 +60,33 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent i = getIntent();
-        String receiver = i.getStringExtra(NewEmailActivity.RECEIVER_TAG);
-        String subject = i.getStringExtra(NewEmailActivity.SUBJECT_TAG);
-        String body = i.getStringExtra(NewEmailActivity.BODY_TAG);
 
-        Email email = new Email(receiver, subject, body);
-        emailList.add(email);
+        if(i.getExtras() != null) {
 
-        // update the array list
-        SharedPreference.writeListInPref(getApplicationContext(), emailList);
+            String receiver = i.getStringExtra(NewEmailActivity.RECEIVER_TAG);
+            String subject = i.getStringExtra(NewEmailActivity.SUBJECT_TAG);
+            String body = i.getStringExtra(NewEmailActivity.BODY_TAG);
 
-        // reverse the list so that the latest will be shown first
-        Collections.reverse(emailList);
-
-        for(int j = 1; j < emailList.size(); j++){
-            receiverList.add(emailList.get(j).getReceiver());
-            subjectList.add(emailList.get(j).getSubject());
-            bodyList.add(emailList.get(j).getBody());
+            Email email = new Email(receiver, subject, body);
+            emailList.add(email);
         }
+            // update the array list
+            SharedPreference.writeListInPref(getApplicationContext(), emailList);
 
-        EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList, bodyList);
-        emailListView.setAdapter(adapter);
+            // reverse the list so that the latest will be shown first
+            Collections.reverse(emailList);
+
+            for (int j = 0; j < emailList.size(); j++) {
+                receiverList.add(emailList.get(j).getReceiver());
+                subjectList.add(emailList.get(j).getSubject());
+                bodyList.add(emailList.get(j).getBody());
+            }
 
 
+            EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList, bodyList);
+            emailListView.setAdapter(adapter);
+
+            
         this.newBtn = findViewById(R.id.newBtn);
         newBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(emailList == null){
+                if(emailList.size() == 0){
                     Toast.makeText(
                             MainActivity.this,
                             "There are no emails currently.",
@@ -108,9 +112,9 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     Intent i = new Intent(MainActivity.this, EmailActivity.class);
 
-                    String latestReceiver = emailList.get(1).getReceiver();
-                    String latestSubject = emailList.get(1).getSubject();
-                    String latestBody = emailList.get(1).getBody();
+                    String latestReceiver = emailList.get(0).getReceiver();
+                    String latestSubject = emailList.get(0).getSubject();
+                    String latestBody = emailList.get(0).getBody();
 
                     i.putExtra(RECEIVER_TAG, latestReceiver);
                     i.putExtra(SUBJECT_TAG, latestSubject);
