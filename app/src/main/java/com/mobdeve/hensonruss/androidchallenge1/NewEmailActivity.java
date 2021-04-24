@@ -57,11 +57,6 @@ public class NewEmailActivity extends AppCompatActivity {
                 i.putExtra(SUBJECT_TAG, subject);
                 i.putExtra(BODY_TAG, body);
 
-                editor.putString(RECEIVER_TAG, receiver);
-                editor.putString(SUBJECT_TAG, subject);
-                editor.putString(BODY_TAG, body);
-
-
                 startActivity(i);
                 finish();
 

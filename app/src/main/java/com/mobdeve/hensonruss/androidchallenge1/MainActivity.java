@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
     Button newBtn, latestBtn;
     TextView noEmailsTv;
 
+    private ArrayList<Email> emailList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,47 +42,33 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> subjectList = new ArrayList<>();
         ArrayList<String> bodyList = new ArrayList<>();
 
-        Intent i = getIntent();
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = sp.edit();
+        emailList = SharedPreference.readListFromPref(this);
 
-        // Check if there's a sent email
-        if(i.getExtras() == null){
+        if(emailList == null){
             emailListView.setVisibility(View.GONE);
             noEmailsTv.setVisibility(View.VISIBLE);
+            emailList = new ArrayList<>();
         }
         else{
-
+            Intent i = getIntent();
             String receiver = i.getStringExtra(NewEmailActivity.RECEIVER_TAG);
             String subject = i.getStringExtra(NewEmailActivity.SUBJECT_TAG);
             String body = i.getStringExtra(NewEmailActivity.BODY_TAG);
 
-            Map<String,?> keys = sp.getAll();
+            Email email = new Email(receiver, subject, body);
+            emailList.add(email);
+            SharedPreference.writeListInPref(getApplicationContext(), emailList);
 
-            for (Map.Entry<String,?> entry : keys.entrySet()){
-                Log.d("map values",entry.getKey() + ": " +
-                        entry.getValue().toString());
+            for(int j = 0; j < emailList.size(); j++){
+                receiverList.add(email.getReceiver());
+                subjectList.add(email.getSubject());
+                bodyList.add(email.getBody());
             }
 
-            receiverList.add(receiver);
-            subjectList.add(subject);
-            bodyList.add(body);
-
+            
             EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList, bodyList);
             emailListView.setAdapter(adapter);
         }
-
-
-
-        /*receiverList.add("henson.rj10@gmail.com");
-        receiverList.add("steezymnl@gmail.com");
-        receiverList.add("henson.russ10@gmail.com");
-        subjectList.add("Question regarding Photoshop");
-        subjectList.add("Steezy design - April");
-        subjectList.add("Meeting set");
-        bodyList.add("hakdjaiofhasoihdfiosahfioshfioa");
-        bodyList.add("pangalawa shoaifhfioashoifhasio faiosfhaioshjfio hfioashfioas");
-        bodyList.add("pangatlo jhasiofhaioshfioas fhasiofhaowe  jrf90ajfh09we");*/
 
 
         this.newBtn = findViewById(R.id.newBtn);
@@ -137,8 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
             return email;
         }
-
-
 
     }
 }
