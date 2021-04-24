@@ -49,26 +49,26 @@ public class MainActivity extends AppCompatActivity {
             noEmailsTv.setVisibility(View.VISIBLE);
             emailList = new ArrayList<>();
         }
-        else{
-            Intent i = getIntent();
-            String receiver = i.getStringExtra(NewEmailActivity.RECEIVER_TAG);
-            String subject = i.getStringExtra(NewEmailActivity.SUBJECT_TAG);
-            String body = i.getStringExtra(NewEmailActivity.BODY_TAG);
 
-            Email email = new Email(receiver, subject, body);
-            emailList.add(email);
-            SharedPreference.writeListInPref(getApplicationContext(), emailList);
+        Intent i = getIntent();
+        String receiver = i.getStringExtra(NewEmailActivity.RECEIVER_TAG);
+        String subject = i.getStringExtra(NewEmailActivity.SUBJECT_TAG);
+        String body = i.getStringExtra(NewEmailActivity.BODY_TAG);
 
-            for(int j = 0; j < emailList.size(); j++){
-                receiverList.add(email.getReceiver());
-                subjectList.add(email.getSubject());
-                bodyList.add(email.getBody());
-            }
+        Email email = new Email(receiver, subject, body);
+        emailList.add(email);
+        SharedPreference.writeListInPref(getApplicationContext(), emailList);
 
-            
-            EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList, bodyList);
-            emailListView.setAdapter(adapter);
+        for(int j = 1; j < emailList.size(); j++){
+            receiverList.add(emailList.get(j).getReceiver());
+            subjectList.add(emailList.get(j).getSubject());
+            bodyList.add(emailList.get(j).getBody());
         }
+
+
+        EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList, bodyList);
+        emailListView.setAdapter(adapter);
+
 
 
         this.newBtn = findViewById(R.id.newBtn);
