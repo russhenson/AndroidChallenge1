@@ -75,6 +75,18 @@
         app:layout_constraintStart_toEndOf="@+id/latestBtn"
         app:layout_constraintTop_toBottomOf="@+id/actionBar" />
 
+    <TextView
+        android:id="@+id/noEmailsTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="No sent emails"
+        android:textSize="22sp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/actionBar" />
+
     <ListView
         android:id="@+id/emailListView"
         android:layout_width="match_parent"
@@ -84,5 +96,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/actionBar" />
+        app:layout_constraintTop_toBottomOf="@+id/actionBar" >
+
+    </ListView>
 </androidx.constraintlayout.widget.ConstraintLayout>

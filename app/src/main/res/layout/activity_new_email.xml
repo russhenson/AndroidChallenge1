@@ -93,7 +93,6 @@
           android:layout_width="354dp"
           android:layout_height="wrap_content"
           android:ems="10"
-          android:hint="henson.rj10@gmail.com"
           android:inputType="textPersonName"
           android:textColor="#000000" />
     </LinearLayout>
@@ -115,7 +114,6 @@
           android:layout_width="315dp"
           android:layout_height="wrap_content"
           android:ems="10"
-          android:hint="HAKDOG"
           android:inputType="textPersonName"
           android:textColor="#000000" />
 
@@ -129,7 +127,6 @@
         android:background="@null"
         android:ems="10"
         android:gravity="top"
-        android:hint="Body of the email"
         android:inputType="textMultiLine"
         android:singleLine="false" />
   </LinearLayout>
