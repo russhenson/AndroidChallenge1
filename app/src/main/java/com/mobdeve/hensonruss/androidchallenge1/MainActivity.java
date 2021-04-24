@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent i = getIntent();
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = sp.edit();
 
         // Check if there's a sent email
         if(i.getExtras() == null){
@@ -47,9 +50,17 @@ public class MainActivity extends AppCompatActivity {
             noEmailsTv.setVisibility(View.VISIBLE);
         }
         else{
+
             String receiver = i.getStringExtra(NewEmailActivity.RECEIVER_TAG);
             String subject = i.getStringExtra(NewEmailActivity.SUBJECT_TAG);
             String body = i.getStringExtra(NewEmailActivity.BODY_TAG);
+
+            Map<String,?> keys = sp.getAll();
+
+            for (Map.Entry<String,?> entry : keys.entrySet()){
+                Log.d("map values",entry.getKey() + ": " +
+                        entry.getValue().toString());
+            }
 
             receiverList.add(receiver);
             subjectList.add(subject);
@@ -70,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         bodyList.add("hakdjaiofhasoihdfiosahfioshfioa");
         bodyList.add("pangalawa shoaifhfioashoifhasio faiosfhaioshjfio hfioashfioas");
         bodyList.add("pangatlo jhasiofhaioshfioas fhasiofhaowe  jrf90ajfh09we");*/
-        
+
 
         this.newBtn = findViewById(R.id.newBtn);
         newBtn.setOnClickListener(new View.OnClickListener() {
