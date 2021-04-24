@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         bodyList.add("pangatlo jhasiofhaioshfioas fhasiofhaowe  jrf90ajfh09we");
 
 
-        EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList);
+        EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList, bodyList);
         emailListView.setAdapter(adapter);
 
         this.newBtn = findViewById(R.id.newBtn);
