@@ -18,7 +18,7 @@ public class EmailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_email);
 
-        // Initialization of the views
+        /*// Initialization of the views
         this.senderTv = findViewById(R.id.emailSenderTv);
         this.receiverTv = findViewById(R.id.emailReceiverTv);
         this.subjectTv = findViewById(R.id.emailSubjectTv);
@@ -35,6 +35,6 @@ public class EmailActivity extends AppCompatActivity {
         this.senderTv.setText(sender);
         this.receiverTv.setText(receiver);
         this.subjectTv.setText(subject);
-        this.bodyTv.setText(body);
+        this.bodyTv.setText(body);*/
     }
 }

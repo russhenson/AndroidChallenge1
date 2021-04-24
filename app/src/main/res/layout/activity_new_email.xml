@@ -111,7 +111,7 @@
       android:id="@+id/emailBodyEt"
       android:layout_width="353dp"
       android:layout_height="450dp"
-      android:background="null"
+      android:background="@null"
       android:ems="10"
       android:gravity="top"
       android:hint="Body of the email"
