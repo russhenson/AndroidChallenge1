@@ -17,8 +17,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
     ListView emailListView;
     Button newBtn, latestBtn;
     TextView noEmailsTv;
+
+    public static final String RECEIVER_TAG = "RECEIVER_TAG";
+    public static final String SUBJECT_TAG = "SUBJECT_TAG";
+    public static final String BODY_TAG = "BODY_TAG";
 
     private ArrayList<Email> emailList;
 
@@ -42,8 +49,10 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> subjectList = new ArrayList<>();
         ArrayList<String> bodyList = new ArrayList<>();
 
+        // Get arraylist of emai in the shared preferences
         emailList = SharedPreference.readListFromPref(this);
 
+        // check if there's email in the array list
         if(emailList == null){
             emailListView.setVisibility(View.GONE);
             noEmailsTv.setVisibility(View.VISIBLE);
@@ -57,7 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
         Email email = new Email(receiver, subject, body);
         emailList.add(email);
+
+        // update the array list
         SharedPreference.writeListInPref(getApplicationContext(), emailList);
+
+        // reverse the list so that the latest will be shown first
+        Collections.reverse(emailList);
 
         for(int j = 1; j < emailList.size(); j++){
             receiverList.add(emailList.get(j).getReceiver());
@@ -65,10 +79,8 @@ public class MainActivity extends AppCompatActivity {
             bodyList.add(emailList.get(j).getBody());
         }
 
-
         EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList, bodyList);
         emailListView.setAdapter(adapter);
-
 
 
         this.newBtn = findViewById(R.id.newBtn);
@@ -85,11 +97,29 @@ public class MainActivity extends AppCompatActivity {
         latestBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, EmailActivity.class);
 
-                //PASS DATA TO SHOW THE LATEST
+                if(emailList == null){
+                    Toast.makeText(
+                            MainActivity.this,
+                            "There are no emails currently.",
+                            Toast.LENGTH_LONG
+                    ).show();
+                }
+                else {
+                    Intent i = new Intent(MainActivity.this, EmailActivity.class);
 
-                startActivity(i);
+                    String latestReceiver = emailList.get(1).getReceiver();
+                    String latestSubject = emailList.get(1).getSubject();
+                    String latestBody = emailList.get(1).getBody();
+
+                    i.putExtra(RECEIVER_TAG, latestReceiver);
+                    i.putExtra(SUBJECT_TAG, latestSubject);
+                    i.putExtra(BODY_TAG, latestBody);
+
+                    startActivity(i);
+                }
+
+
             }
         });
 
