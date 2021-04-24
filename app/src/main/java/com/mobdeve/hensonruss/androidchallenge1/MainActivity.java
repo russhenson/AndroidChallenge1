@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     ListView emailListView;
     Button newBtn, latestBtn;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,18 +35,27 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<String> subjectList = new ArrayList<>();
         ArrayList<String> bodyList = new ArrayList<>();
 
-        receiverList.add("henson.rj10@gmail.com");
-        receiverList.add("steezymnl@gmail.com");
-        receiverList.add("henson.russ10@gmail.com");
+
+
+        Intent i = getIntent();
+
+        String receiver = i.getStringExtra(NewEmailActivity.RECEIVER_TAG);
+        String subject = i.getStringExtra(NewEmailActivity.SUBJECT_TAG);
+        String body = i.getStringExtra(NewEmailActivity.BODY_TAG);
+
+        receiverList.add(receiver);
+        subjectList.add(subject);
+        bodyList.add(body);
+
         receiverList.add("henson.rj10@gmail.com");
         receiverList.add("steezymnl@gmail.com");
         receiverList.add("henson.russ10@gmail.com");
         subjectList.add("Question regarding Photoshop");
         subjectList.add("Steezy design - April");
         subjectList.add("Meeting set");
-        subjectList.add("Question regarding Photoshop");
-        subjectList.add("Steezy design - April");
-        subjectList.add("Meeting set");
+        bodyList.add("hakdjaiofhasoihdfiosahfioshfioa");
+        bodyList.add("pangalawa shoaifhfioashoifhasio faiosfhaioshjfio hfioashfioas");
+        bodyList.add("pangatlo jhasiofhaioshfioas fhasiofhaowe  jrf90ajfh09we");
 
 
         EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList);
@@ -80,12 +90,14 @@ public class MainActivity extends AppCompatActivity {
         Context context;
         ArrayList<String> rReceiver;
         ArrayList<String> rSubject;
+        ArrayList<String> rBody;
 
-        EmailListAdapter(Context c, ArrayList<String> receiver, ArrayList<String> subject) {
+        EmailListAdapter(Context c, ArrayList<String> receiver, ArrayList<String> subject, ArrayList<String> body) {
             super(c, R.layout.email_layout, R.id.sentEmailReceiverTv, receiver);
             this.context = c;
             this.rReceiver = receiver;
             this.rSubject = subject;
+            this.rBody = body;
         }
 
         @NonNull
@@ -95,9 +107,11 @@ public class MainActivity extends AppCompatActivity {
             View email = layoutInflater.inflate(R.layout.email_layout, parent, false);
             TextView receiver = email.findViewById(R.id.sentEmailReceiverTv);
             TextView subject = email.findViewById(R.id.sentEmailSubjectTv);
+            TextView body = email.findViewById(R.id.sentEmailBodyTv);
 
             receiver.setText(rReceiver.get(position));
             subject.setText(rSubject.get(position));
+            body.setText(rBody.get(position));
 
             return email;
         }
