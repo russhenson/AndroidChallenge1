@@ -130,7 +130,8 @@
         android:ems="10"
         android:gravity="top"
         android:hint="Body of the email"
-        android:inputType="textPersonName" />
+        android:inputType="textMultiLine"
+        android:singleLine="false" />
   </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
