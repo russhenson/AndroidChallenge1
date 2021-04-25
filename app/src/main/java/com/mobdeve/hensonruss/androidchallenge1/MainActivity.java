@@ -33,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
     Button newBtn, latestBtn;
     TextView noEmailsTv;
 
-    public static final String RECEIVER_TAG = "RECEIVER_TAG";
-    public static final String SUBJECT_TAG = "SUBJECT_TAG";
-    public static final String BODY_TAG = "BODY_TAG";
-    public static final String DRAFT_TAG = "DRAFT_TAG";
+    private static final String RECEIVER_TAG = "RECEIVER_TAG";
+    private static final String SUBJECT_TAG = "SUBJECT_TAG";
+    private static final String BODY_TAG = "BODY_TAG";
+    private static final String DRAFT_TAG = "DRAFT_TAG";
 
     private ArrayList<Email> emailList;
     private boolean draft;
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().hide(); // hide title bar
         setContentView(R.layout.activity_main);
 
-        emailListView = (ListView) findViewById(R.id.emailListView);
+        /*emailListView = (ListView) findViewById(R.id.emailListView);
         noEmailsTv = findViewById(R.id.noEmailsTv);
 
         ArrayList<String> receiverList = new ArrayList<>();
@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         // Check if there's draft
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         draft = sp.getBoolean(DRAFT_TAG, false);
+        Log.d("MainActivity", "onCreate called. Draft: " + draft);
 
 
         // Get arraylist of email in the shared preferences
@@ -103,26 +104,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList, bodyList);
-            emailListView.setAdapter(adapter);
+            emailListView.setAdapter(adapter);*/
 
-            emailListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    /*if(draft == true && position == 0){
-                        Intent i = new Intent(MainActivity.this, NewEmailActivity.class);
-                        String receiver = emailList.get(0).getReceiver();
-                        String subject = emailList.get(0).getSubject();
-                        String body = emailList.get(0).getBody();
+    }
 
-                        i.putExtra(RECEIVER_TAG, receiver);
-                        i.putExtra(SUBJECT_TAG, subject);
-                        i.putExtra(BODY_TAG, body);
-                        i.putExtra(DRAFT_TAG, draft);
-
-                        startActivity(i);
-                    }*/
-                }
-            });
+    private void setOnClickListeners(){
 
         this.newBtn = findViewById(R.id.newBtn);
         newBtn.setOnClickListener(new View.OnClickListener() {
@@ -138,8 +124,12 @@ public class MainActivity extends AppCompatActivity {
                                     Intent i = new Intent(MainActivity.this, NewEmailActivity.class);
 
                                     //delete the draft
+                                    SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                                     SharedPreferences.Editor editor = sp.edit();
 
+
+                                    // there's no draft anymore if user proceeds
+                                    //draft = false;
 
                                     startActivity(i);
                                 }
@@ -162,14 +152,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(emailList.size() == 0){
+                if(emailList.size() == 0 || (emailList.size() == 1 && draft == true)){
                     Toast.makeText(
                             MainActivity.this,
                             "There are no emails currently.",
                             Toast.LENGTH_LONG
                     ).show();
                 }
-                else if(draft == true){
+                else if(draft == true && emailList.size() > 1){
                     Intent i = new Intent(MainActivity.this, EmailActivity.class);
 
                     String latestReceiver = emailList.get(1).getReceiver();
@@ -200,6 +190,103 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        emailListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(draft == true && position == 0){
+                    Intent i = new Intent(MainActivity.this, NewEmailActivity.class);
+                    String receiver = emailList.get(0).getReceiver();
+                    String subject = emailList.get(0).getSubject();
+                    String body = emailList.get(0).getBody();
+
+                    i.putExtra(RECEIVER_TAG, receiver);
+                    i.putExtra(SUBJECT_TAG, subject);
+                    i.putExtra(BODY_TAG, body);
+                    i.putExtra(DRAFT_TAG, draft);
+
+
+                    startActivity(i);
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        draft = sp.getBoolean(DRAFT_TAG, false);
+
+        //update the views
+
+        emailListView = (ListView) findViewById(R.id.emailListView);
+        noEmailsTv = findViewById(R.id.noEmailsTv);
+
+        ArrayList<String> receiverList = new ArrayList<>();
+        ArrayList<String> subjectList = new ArrayList<>();
+        ArrayList<String> bodyList = new ArrayList<>();
+
+        // Check if there's draft
+        Log.d("MainActivity", "onCreate called. Draft: " + draft);
+
+
+        // Get arraylist of email in the shared preferences
+        emailList = SharedPreference.readListFromPref(this);
+
+        // check if there's email in the array list
+        if(emailList == null){
+            emailListView.setVisibility(View.GONE);
+            noEmailsTv.setVisibility(View.VISIBLE);
+            emailList = new ArrayList<>();
+        }
+
+        Intent i = getIntent();
+
+        if(i.getExtras() != null && draft != true) {
+
+            String receiver = i.getStringExtra(RECEIVER_TAG);
+            String subject = i.getStringExtra(SUBJECT_TAG);
+            String body = i.getStringExtra(BODY_TAG);
+            //draft = i.getBooleanExtra(DRAFT_TAG, false);
+
+            Email email = new Email(receiver, subject, body);
+            emailList.add(email);
+        }
+        else if(draft == true){
+
+            String receiver = sp.getString(RECEIVER_TAG, "");
+            String subject = sp.getString(SUBJECT_TAG, "");
+            String body = sp.getString(BODY_TAG, "");
+
+            Email email = new Email(receiver, subject, body);
+            emailList.add(email);
+        }
+        // update the array list
+        SharedPreference.writeListInPref(getApplicationContext(), emailList);
+
+        // reverse the list so that the latest will be shown first
+        Collections.reverse(emailList);
+
+        for (int j = 0; j < emailList.size(); j++) {
+            receiverList.add(emailList.get(j).getReceiver());
+            subjectList.add(emailList.get(j).getSubject());
+            bodyList.add(emailList.get(j).getBody());
+        }
+
+        EmailListAdapter adapter = new EmailListAdapter(this, receiverList, subjectList, bodyList);
+        emailListView.setAdapter(adapter);
+
+        setOnClickListeners();
+
+        Log.d("MainActivity", "onStart called. Draft: " + draft);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.d("MainActivity", "onResume called.");
     }
 
     class EmailListAdapter extends ArrayAdapter<String> {

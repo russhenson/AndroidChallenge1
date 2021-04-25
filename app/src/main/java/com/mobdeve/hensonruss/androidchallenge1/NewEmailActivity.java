@@ -17,10 +17,12 @@ public class NewEmailActivity extends AppCompatActivity {
     Button discardBtn, sendBtn;
     EditText receiverEt, subjectEt, emailBodyEt;
 
-    public static final String RECEIVER_TAG = "RECEIVER_TAG";
-    public static final String SUBJECT_TAG = "SUBJECT_TAG";
-    public static final String BODY_TAG = "BODY_TAG";
-    public static final String DRAFT_TAG = "DRAFT_TAG";
+    private static final String RECEIVER_TAG = "RECEIVER_TAG";
+    private static final String SUBJECT_TAG = "SUBJECT_TAG";
+    private static final String BODY_TAG = "BODY_TAG";
+    private static final String DRAFT_TAG = "DRAFT_TAG";
+
+    private boolean draft;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,13 +35,21 @@ public class NewEmailActivity extends AppCompatActivity {
         this.subjectEt = findViewById(R.id.subjectEt);
         this.emailBodyEt = findViewById(R.id.emailBodyEt);
 
-        /*// edit draft
         Intent i = getIntent();
-        if(i.getExtras() != null){
+
+        draft = i.getBooleanExtra(DRAFT_TAG, false);
+
+        if(draft == true){
             receiverEt.setText(i.getStringExtra(RECEIVER_TAG));
             subjectEt.setText(i.getStringExtra(SUBJECT_TAG));
             emailBodyEt.setText(i.getStringExtra(BODY_TAG));
-        }*/
+        }
+        else {
+            receiverEt.setText(null);
+            subjectEt.setText(null);
+            emailBodyEt.setText(null);
+        }
+
 
         this.discardBtn = findViewById(R.id.discardBtn);
         discardBtn.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +86,14 @@ public class NewEmailActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG
                     ).show();
                 }
+                else if(draft == true){
+                    draft = false;
+                    editor.putBoolean(DRAFT_TAG, draft);
+                    // delete draft
+
+                    startActivity(i);
+                    finish();
+                }
                 else {
                     startActivity(i);
                     finish();
@@ -85,15 +103,35 @@ public class NewEmailActivity extends AppCompatActivity {
 
             }
         });
+        Log.d("NewEmailActivity", "onCreate called.");
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.d("NewEmailActivity", "onResume called.");
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        int receiver = receiverEt.getText().toString().length();
+        int subject = subjectEt.getText().toString().length();
+        int body = emailBodyEt.getText().toString().length();
+
+        // if it's empty
+        if(receiver < 1 && subject < 1 && body < 1)
+            draft = false;
+        else
+            draft = true;
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 
-        Log.d("NewEmailActivity", "onPause");
-
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sp.edit();
 
@@ -101,31 +139,52 @@ public class NewEmailActivity extends AppCompatActivity {
         String subject = subjectEt.getText().toString();
         String body = emailBodyEt.getText().toString();
 
-        editor.putString(RECEIVER_TAG, receiver);
-        editor.putString(SUBJECT_TAG, subject);
-        editor.putString(BODY_TAG, body);
-        editor.putBoolean(DRAFT_TAG, true);
+        if(receiver.length() > 1 | subject.length() > 1 | body.length() > 1){
+            editor.putString(RECEIVER_TAG, receiver);
+            editor.putString(SUBJECT_TAG, subject);
+            editor.putString(BODY_TAG, body);
+            editor.putBoolean(DRAFT_TAG, draft);
 
-        editor.apply();
+            editor.apply();
+        }
+
+        Boolean draft = sp.getBoolean(DRAFT_TAG, false);
+
+        //Log.d("NewEmailActivity", "onPause called.");
+        Log.d("NewEmailActivity", "onPause called. Draft: "  + draft);
+
     }
 
-    /*@Override
+    @Override
     protected void onStop() {
         super.onStop();
 
-        Log.d("NewEmailActivity", "onStop");
-
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        /*SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = sp.edit();
 
         String receiver = receiverEt.getText().toString();
         String subject = subjectEt.getText().toString();
         String body = emailBodyEt.getText().toString();
 
-        editor.putString(RECEIVER_TAG, receiver);
-        editor.putString(SUBJECT_TAG, subject);
-        editor.putString(BODY_TAG, body);
-        editor.putBoolean(DRAFT_TAG, true);
+        if(receiver.length() > 1 | subject.length() > 1 | body.length() > 1){
+            editor.putString(RECEIVER_TAG, receiver);
+            editor.putString(SUBJECT_TAG, subject);
+            editor.putString(BODY_TAG, body);
+            editor.putBoolean(DRAFT_TAG, draft);
 
-    }*/
+            editor.apply();
+        }
+
+        Boolean draft = sp.getBoolean(DRAFT_TAG, false);*/
+
+        Log.d("NewEmailActivity", "onStop called.");
+        //Log.d("NewEmailActivity", "onStop called. Draft:" + draft);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Log.d("NewEmailActivity", "onDestroy called.");
+    }
 }
