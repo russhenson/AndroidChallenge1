@@ -31,15 +31,20 @@ public class MainActivity extends AppCompatActivity {
 
     ListView emailListView;
     Button newBtn, latestBtn;
-    TextView noEmailsTv;
+    TextView noEmailsTv, draftTv;
 
     private static final String RECEIVER_TAG = "RECEIVER_TAG";
     private static final String SUBJECT_TAG = "SUBJECT_TAG";
     private static final String BODY_TAG = "BODY_TAG";
     private static final String DRAFT_TAG = "DRAFT_TAG";
+    private static final String DRAFT_REMOVED_TAG = "DRAFT_REMOVED_TAG";
+
+    private String draftReceiverTemp;
+    private String draftSubjectTemp;
+    private String draftBodyTemp;
 
     private ArrayList<Email> emailList;
-    private boolean draft;
+    private boolean draft, draftRemoved;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,13 +128,23 @@ public class MainActivity extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int which) {
                                     Intent i = new Intent(MainActivity.this, NewEmailActivity.class);
 
-                                    //delete the draft
                                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
                                     SharedPreferences.Editor editor = sp.edit();
 
-
                                     // there's no draft anymore if user proceeds
-                                    //draft = false;
+                                    /*draftReceiverTemp = emailList.get(0).getReceiver().toString();
+                                    draftSubjectTemp = emailList.get(0).getSubject().toString();
+                                    draftBodyTemp = emailList.get(0).getBody().toString();
+
+                                    editor.remove(draftReceiverTemp);
+                                    editor.remove(draftSubjectTemp);
+                                    editor.remove(draftBodyTemp);
+                                    editor.putBoolean(DRAFT_TAG, false);
+                                    editor.apply();*/
+
+                                    draft = false;
+                                    draftRemoved = true;
+                                    draftTv.setVisibility(View.INVISIBLE);
 
                                     startActivity(i);
                                 }
@@ -217,22 +232,33 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         draft = sp.getBoolean(DRAFT_TAG, false);
+        draftRemoved = sp.getBoolean(DRAFT_REMOVED_TAG, false);
+
 
         //update the views
-
         emailListView = (ListView) findViewById(R.id.emailListView);
         noEmailsTv = findViewById(R.id.noEmailsTv);
+        draftTv = findViewById(R.id.draftTv);
 
         ArrayList<String> receiverList = new ArrayList<>();
         ArrayList<String> subjectList = new ArrayList<>();
         ArrayList<String> bodyList = new ArrayList<>();
 
         // Check if there's draft
-        Log.d("MainActivity", "onCreate called. Draft: " + draft);
+        Log.d("MainActivity", "onStart called. Draft: " + draft);
 
 
         // Get arraylist of email in the shared preferences
         emailList = SharedPreference.readListFromPref(this);
+
+        Log.d("MainActivity", "draft remove: " + draftRemoved);
+        if(draftRemoved == true && emailList.size() != 0){
+            Log.d("MainActivity", "draft removed.");
+            emailList.remove(0);
+            emailList.remove(emailList.get(0));
+
+        }
+
 
         // check if there's email in the array list
         if(emailList == null){
@@ -250,6 +276,8 @@ public class MainActivity extends AppCompatActivity {
             String body = i.getStringExtra(BODY_TAG);
             //draft = i.getBooleanExtra(DRAFT_TAG, false);
 
+            Log.d("MainActivity", "No draft");
+
             Email email = new Email(receiver, subject, body);
             emailList.add(email);
         }
@@ -259,6 +287,8 @@ public class MainActivity extends AppCompatActivity {
             String subject = sp.getString(SUBJECT_TAG, "");
             String body = sp.getString(BODY_TAG, "");
 
+            draftTv.setVisibility(View.VISIBLE);
+
             Email email = new Email(receiver, subject, body);
             emailList.add(email);
         }
@@ -267,6 +297,8 @@ public class MainActivity extends AppCompatActivity {
 
         // reverse the list so that the latest will be shown first
         Collections.reverse(emailList);
+
+        Log.d("MainActivity", "Email ArrayList Size: " + emailList.size());
 
         for (int j = 0; j < emailList.size(); j++) {
             receiverList.add(emailList.get(j).getReceiver());
